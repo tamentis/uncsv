@@ -33,9 +33,9 @@ non-quoted delimited file (pipe by default). This program will error out if
 it encounters a character matching the delimiter.
 .Sh EXAMPLES
 .Pp
- uncsv file.csv | awk -F\| '{ print $2 }'
+ uncsv file.csv | awk -F\\| '{ print $2 }'
 .Pp
- uncsv < file.csv > delimited
+ uncsv -d'\\t' < file.csv > delimited
 .Sh SEE ALSO
 .Xr awk 1 ,
 .Xr cut 1 ,

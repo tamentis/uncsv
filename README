@@ -14,9 +14,9 @@ DESCRIPTION
      error out if it encounters a character matching the delimiter.
 
 EXAMPLES
-      uncsv file.csv | awk ‐F ’{ print $2 }’
+      uncsv file.csv | awk ‐F\| ’{ print $2 }’
 
-      uncsv < file.csv > delimited
+      uncsv ‐d’\t’ < file.csv > delimited
 
 SEE ALSO
      awk(1), cut(1),

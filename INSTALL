@@ -1,0 +1,27 @@
+uncsv - installation notes
+==========================
+
+REQUIREMENTS
+    If you are installing uncsv from source, you need a C compiler and a
+    UNIX-like operating system.
+
+
+INSTALLATION
+    ./configure
+    make
+    sudo make install
+
+
+RELEASE
+    1. Change the version in ``configure``,
+    2. Tag the new branch:
+
+        git tag -a vX.Y.Z -m 'Releasing vX.Y.Z'
+        git push --tags
+
+    3. Download the file from github (release section),
+    4. Sign it:
+
+        gpg --armor --detach-sig uncsv-X-Y-Z.tar.gz
+
+    5. Distribute!

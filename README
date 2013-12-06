@@ -11,11 +11,16 @@ SYNOPSIS
 DESCRIPTION
      uncsv is a filter command converting the lines of a CSV file into non‐
      escaped, non‐quoted delimited file (pipe by default). This program will
-     error out if it encounters a character matching the delimiter.
+     error out if it encounters a character matching the delimiter, it will
+     also replace all the carriage return and new‐line characters by spaces;
+     assuming you are planning on using ordinary UNIX tools with the output,
+     this is what you want.
 
 EXAMPLES
+      # Print the second field of a CSV.
       uncsv file.csv | awk ‐F\| ’{ print $2 }’
 
+      # Convert a CSV to un‐quoted tab‐delimited format.
       uncsv ‐d’\t’ < file.csv > delimited
 
 SEE ALSO

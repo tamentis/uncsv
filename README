@@ -25,10 +25,4 @@ AUTHORS
      uncsv was written by Bertrand Janin <b@janin.com> and is distributed
      under an ISC license (BSD compatible, OSI compatible).
 
-     The time parsing functions are coming from OpenBSD’s at command, with the
-     following copyrights:
-
-      Copyright (C) 1993, 1994	Thomas Koenig
-      Copyright (C) 1993  David Parsons
-
 BSD			       December 6, 2013 			   BSD

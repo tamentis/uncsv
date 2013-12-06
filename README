@@ -1,7 +1,3 @@
-
-
-uncsv(1)		    User’s Reference Manual		      uncsv(1)
-
 NAME
      uncsv — un‐escape/un‐quote a CSV stream
 
@@ -24,10 +20,9 @@ EXAMPLES
       uncsv ‐d’\t’ < file.csv > delimited
 
 SEE ALSO
-     awk(1), cut(1),
+     awk(1), cut(1)
 
 AUTHORS
      uncsv was written by Bertrand Janin <b@janin.com> and is distributed
      under an ISC license (BSD compatible, OSI compatible).
 
-BSD			       December 6, 2013 			   BSD

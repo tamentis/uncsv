@@ -16,4 +16,14 @@ clean:
 	cd src/ && make clean
 
 README: ${BINARY}.1
-	nroff -man ${BINARY}.1 | col -b > README
+	nroff -man ${BINARY}.1 \
+	 	| sed 's/.//g' \
+	 	| tail +5 \
+	 	| sed '$$d' \
+		| col -b > README
+	# OpenBSD
+	# mandoc -Tascii ${PROG}.1 \
+	# 	| sed 's/.//g' \
+	# 	| tail +3 \
+	# 	| sed '$$d' \
+	# 	> README

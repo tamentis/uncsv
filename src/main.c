@@ -21,6 +21,8 @@
 #include <err.h>
 
 
+#define READ_BUFFER_SIZE 1024
+
 #define CONVERT_OUTCOME_ERROR -1
 #define CONVERT_OUTCOME_KEEP 0
 #define CONVERT_OUTCOME_DROP 1
@@ -46,6 +48,10 @@ usage(void)
 int
 convert_char(char *c)
 {
+	if (*c == delimiter) {
+		errx(100, "error: found output delimiter in input data");
+	}
+
 	if (possible_quoted_quote == 1) {
 		possible_quoted_quote = 0;
 		if (*c == '"')
@@ -99,11 +105,11 @@ int
 convert_from_fp(FILE *fp)
 {
 	int i, retcode;
-	char buf[128], c;
+	char buf[READ_BUFFER_SIZE], c;
 	size_t s;
 
 	for (;;) {
-		s = fread(buf, 1, 128, fp);
+		s = fread(buf, 1, sizeof(buf), fp);
 		if (ferror(fp) != 0) {
 			return -1;
 		}
@@ -115,7 +121,6 @@ convert_from_fp(FILE *fp)
 				return -1;
 			}
 
-			/* Indication from convert_char to drop the char. */
 			if (retcode == CONVERT_OUTCOME_DROP)
 				continue;
 
@@ -128,8 +133,6 @@ convert_from_fp(FILE *fp)
 		if (feof(fp) != 0) {
 			break;
 		}
-
-		fflush(stdout);
 	}
 
 	return 0;

@@ -1,0 +1,19 @@
+BINARY=uncsv
+
+all:
+	cd src/ && make
+
+install:
+	install -d -m 755 ${PREFIX}/bin
+	install -m 755 src/${BINARY} ${PREFIX}/bin
+	install -d -m 755 ${PREFIX}/${MANDEST}/man1
+	install -m 644 ${BINARY}.1 ${PREFIX}/${MANDEST}/man1
+
+mantest:
+	nroff -man ${BINARY}.1 | less -R
+
+clean:
+	cd src/ && make clean
+
+README: ${BINARY}.1
+	nroff -man ${BINARY}.1 | col -b > README

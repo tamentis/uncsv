@@ -1,0 +1,51 @@
+\"
+.\" Copyright (c) 2013 Bertrand Janin <b@janin.com>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd 2013-12-06
+.Dt uncsv 1 URM
+.Os
+.Sh NAME
+.Nm uncsv
+.Nd un-escape/un-quote a CSV stream
+.Sh SYNOPSIS
+.Nm uncsv
+.Bk -words
+.Op Fl hV
+.Op Fl d Ar delimiter
+.Op Ar file ...
+.Ek
+.Sh DESCRIPTION
+.Nm
+is a filter command converting the lines of a CSV file into non-escaped,
+non-quoted delimited file (pipe by default). This program will error out if
+it encounters a character matching the delimiter.
+.Sh EXAMPLES
+.Pp
+ uncsv file.csv | awk -F\| '{ print $2 }'
+.Pp
+ uncsv < file.csv > delimited
+.Sh SEE ALSO
+.Xr awk 1 ,
+.Xr cut 1 ,
+.Sh AUTHORS
+.Nm
+was written by Bertrand Janin <b@janin.com> and is distributed under
+an ISC license (BSD compatible, OSI compatible).
+.Pp
+The time parsing functions are coming from OpenBSD's at command, with the
+following copyrights:
+.Pp
+ Copyright (C) 1993, 1994  Thomas Koenig
+ Copyright (C) 1993  David Parsons

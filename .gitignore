@@ -1,5 +1,5 @@
 *.o
-sleepuntil
+src/uncsv
 Makefile
 tags
 LOG

@@ -12,6 +12,17 @@ DESCRIPTION
      assuming you are planning on using ordinary UNIX tools with the output,
      this is what you want.
 
+     The options are as follows:
+
+     −d delimiter
+	     Specify the output delimiter, defaults to the pipe character ’|’.
+	     If the delimiter is found in the input data, the program inter‐
+	     rupts.
+
+     −V      Print version.
+
+     −h      Print usage.
+
 EXAMPLES
       # Print the second field of a CSV.
       uncsv file.csv | awk ‐F\| ’{ print $2 }’

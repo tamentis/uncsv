@@ -33,6 +33,17 @@ non-quoted delimited file (pipe by default). This program will error out if
 it encounters a character matching the delimiter, it will also replace all the
 carriage return and new-line characters by spaces; assuming you are planning
 on using ordinary UNIX tools with the output, this is what you want.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl d Ar delimiter
+Specify the output delimiter, defaults to the pipe character '|'. If the
+delimiter is found in the input data, the program interrupts.
+.It Fl V
+Print version.
+.It Fl h
+Print usage.
+.El
 .Sh EXAMPLES
 .Pp
  # Print the second field of a CSV.

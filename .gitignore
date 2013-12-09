@@ -1,5 +1,6 @@
 *.o
 src/uncsv
+src/csv
 Makefile
 tags
 LOG

@@ -1,17 +1,13 @@
-BINARY=uncsv
-OBJECTS=main.o
-OBJECTS+=${EXTRA_OBJECTS}
-HEADERS=
+all: uncsv csv
 
-all: ${BINARY}
+uncsv: uncsv.o main.o
+	${CC} ${LDFLAGS} -o uncsv uncsv.o main.o
 
-${BINARY}: ${OBJECTS}
-	${CC} ${LDFLAGS} -o ${BINARY} ${OBJECTS}
-
-${OBJECTS}: ${HEADERS}
+csv: csv.o main.o
+	${CC} ${LDFLAGS} -o csv csv.o main.o
 
 ctags:
 	ctags *.c *.h
 
 clean:
-	rm -f ${BINARY} ${OBJECTS}
+	rm -f csv uncsv *.o

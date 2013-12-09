@@ -1,22 +1,21 @@
-BINARY=uncsv
-
 all:
 	cd src/ && make
 
 install:
 	install -d -m 755 ${PREFIX}/bin
-	install -m 755 src/${BINARY} ${PREFIX}/bin
+	install -m 755 src/uncsv ${PREFIX}/bin
 	install -d -m 755 ${PREFIX}/${MANDEST}/man1
-	install -m 644 ${BINARY}.1 ${PREFIX}/${MANDEST}/man1
+	install -m 644 uncsv.1 ${PREFIX}/${MANDEST}/man1/uncsv.1
+	install -m 644 uncsv.1 ${PREFIX}/${MANDEST}/man1/csv.1
 
 mantest:
-	nroff -man ${BINARY}.1 | less -R
+	nroff -man uncsv.1 | less -R
 
 clean:
 	cd src/ && make clean
 
-README: ${BINARY}.1
-	nroff -man ${BINARY}.1 \
+README: uncsv.1
+	nroff -man uncsv.1 \
 	 	| sed 's/.//g' \
 	 	| tail +5 \
 	 	| sed '$$d' \

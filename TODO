@@ -1,3 +1,4 @@
+ - cleanup the buffered write in uncsv.c and implement one in csv.c.
  - basic test suite
  - allow to pass the new-line replacement string (default to space).
  - document the line and field size limit for 'csv'.

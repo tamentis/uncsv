@@ -21,7 +21,8 @@
 #include <err.h>
 
 
-#define READ_BUFFER_SIZE 1024
+#define READ_BUFFER_SIZE 4096
+#define WRITE_BUFFER_SIZE 4096
 
 #define CONVERT_OUTCOME_ERROR -1
 #define CONVERT_OUTCOME_KEEP 0
@@ -102,8 +103,9 @@ convert_char(char *c)
 int
 convert_from_fp(FILE *fp)
 {
-	int i, retcode;
+	int i, retcode, o = 0;
 	char buf[READ_BUFFER_SIZE], c;
+	char output[WRITE_BUFFER_SIZE];
 	size_t s;
 
 	for (;;) {
@@ -123,8 +125,19 @@ convert_from_fp(FILE *fp)
 			if (retcode == CONVERT_OUTCOME_DROP)
 				continue;
 
-			retcode = putchar(c);
-			if (retcode == EOF) {
+			output[o++] = c;
+			if (o == WRITE_BUFFER_SIZE) {
+				retcode = fwrite(output, sizeof(char), WRITE_BUFFER_SIZE, stdout);
+				if (retcode < WRITE_BUFFER_SIZE) {
+					return -1;
+				}
+				o = 0;
+			}
+		}
+
+		if (o > 0) {
+			retcode = fwrite(output, sizeof(char), o, stdout);
+			if (retcode < o) {
 				return -1;
 			}
 		}

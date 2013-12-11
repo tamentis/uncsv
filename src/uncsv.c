@@ -105,7 +105,6 @@ convert_from_fp(FILE *fp)
 {
 	int i, retcode, o = 0;
 	char buf[READ_BUFFER_SIZE], c;
-	char output[WRITE_BUFFER_SIZE];
 	size_t s;
 
 	for (;;) {
@@ -125,21 +124,11 @@ convert_from_fp(FILE *fp)
 			if (retcode == CONVERT_OUTCOME_DROP)
 				continue;
 
-			output[o++] = c;
-			if (o == WRITE_BUFFER_SIZE) {
-				retcode = fwrite(output, sizeof(char), WRITE_BUFFER_SIZE, stdout);
-				if (retcode < WRITE_BUFFER_SIZE) {
-					return -1;
-				}
-				o = 0;
-			}
+			write_character(c);
 		}
 
 		if (o > 0) {
-			retcode = fwrite(output, sizeof(char), o, stdout);
-			if (retcode < o) {
-				return -1;
-			}
+			flush_output();
 		}
 
 		if (feof(fp) != 0) {

@@ -32,6 +32,9 @@ extern char delimiter;
 int start_of_line = 1;
 
 
+void write_character(char);
+void write_string(char *, size_t);
+
 void
 usage(void)
 {
@@ -40,31 +43,56 @@ usage(void)
 }
 
 
+/*
+ * Quote/escape a single field.
+ *
+ * Add surrounding double-quotes on all fields containing a comma or a
+ * doube-quote. Optionally quote the fields with heading/trailing spaces since
+ * some sketchy implementations tend to delete them.
+ *
+ * The inner loop is implemented with memcpy/strchr because these two functions
+ * are often implemented in assembly while a normal char-by-char implementation
+ * would not. It was proven to be three times faster on OS X.
+ */
 void
-handle_field(char *c)
+convert_field(char *c, size_t len)
 {
-	char buf[MAXFIELDLEN] = "\"", *cur;
-	char last = '\0';
+	static char buf[MAXFIELDLEN] = "\"";
+	char *cur, *q;
 	int offset = 1;
 	int quoted = 0;
+	size_t l;
 
 	if (start_of_line == 0) {
-		putchar(',');
+		write_character(',');
 	}
 
 	cur = buf + 1;
 
-	while (*c != '\0') {
-		if (*c == '"') {
-			*(cur++) = '"';
-			quoted = 1;
+	for (;;) {
+		q = strchr(c, '"');
+		if (q == NULL) {
+			memcpy(cur, c, len);
+			cur += len;
+			break;
 		}
 
-		last = *c;
-		*(cur++) = *(c++);
+		quoted = 1;
+
+		/* Copy everything up to the quote, including the quote. */
+		l = q - c + 1;
+		memcpy(cur, c, l);
+		cur += l;
+		c += l;
+
+		/* Add the actual quote (after the escaping one). */
+		*(cur++) = '"';
+
+		len -= l;
 	}
 
-	if (buf[1] == ' ' || buf[1] == '\t' || last == ' ' || last == '\t') {
+	if (buf[1] == ' ' || buf[1] == '\t' || buf[len] == ' '
+			|| buf[len] == '\t') {
 		quoted = 1;
 	}
 
@@ -73,22 +101,72 @@ handle_field(char *c)
 		*(cur++) = '"';
 	}
 
-	*cur = '\0';
-
-	printf("%s", buf + offset);
+	write_string(buf + offset, cur - (buf + offset));
 	start_of_line = 0;
 }
 
 
 /*
- * Given a file pointer, convert all the characters one by one to a delimited
- * stream (non-quoted, non-escaped).
+ * Convert a single NUL-delimited line to CSV.
+ *
+ * Split the fields according to the delimiter and feed them to convert_field
+ * for proper quoting/escaping then add a comma between each of them while
+ * keeping the original end of line termination.
+ */
+int
+convert_line(char *line)
+{
+	char c, *f, *cur;
+	size_t fieldlen;
+
+	cur = line;
+
+	for (;;) {
+		/* Find delimiter. */
+		f = strchr(cur, delimiter);
+		if (f != NULL) {
+			fieldlen = f - cur;
+			*f = '\0';
+			convert_field(cur, fieldlen);
+			cur = f + 1;
+			continue;
+		}
+
+		/*
+		 * End of line, take care of the field, then replicate
+		 * whatever end-of-line non-sense was already in place.
+		 */
+		f = strpbrk(cur, "\r\n");
+		if (f != NULL) {
+			fieldlen = f - cur;
+			c = *f;
+			*f = '\0';
+			convert_field(cur, fieldlen);
+			*f = c;
+			write_string(f, strlen(f));
+			start_of_line = 1;
+			break;
+		}
+
+		/* End of file; take whatever is left. */
+		convert_field(cur, strlen(cur));
+		break;
+	}
+
+	return 0;
+}
+
+
+/*
+ * Print a file pointer to script as CSV.
+ *
+ * Call convert_line() for each line in the opened file pointer.
  */
 int
 convert_from_fp(FILE *fp)
 {
-	char c;
-	char line[MAXLINELEN], *f, *cur;
+	int lineno = 1, retcode;
+	char line[MAXLINELEN];
 
 	for (;;) {
 		if (fgets(line, sizeof(line), fp) == NULL) {
@@ -99,39 +177,12 @@ convert_from_fp(FILE *fp)
 			}
 		}
 
-		cur = line;
-
-		for (;;) {
-			/* Find delimiter. */
-			f = strchr(cur, delimiter);
-			if (f != NULL) {
-				*f = '\0';
-				handle_field(cur);
-				cur = f + 1;
-				continue;
-			}
-
-			/*
-			 * End of line, take care of the field, then replicate
-			 * whatever end-of-line non-sense was already in place.
-			 */
-			f = strpbrk(cur, "\r\n");
-			if (f != NULL) {
-				c = *f;
-				*f = '\0';
-				handle_field(cur);
-				*f = c;
-				printf("%s", f);
-				start_of_line = 1;
-				break;
-			}
-
-			/*
-			 * End of file situation. Take whatever is left.
-			 */
-			handle_field(cur);
-			break;
+		retcode = convert_line(line);
+		if (retcode != 0) {
+			errx(100, "error converting line %d", lineno);
 		}
+
+		lineno++;
 	}
 
 	return 0;

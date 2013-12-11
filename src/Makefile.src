@@ -1,10 +1,10 @@
 all: uncsv csv
 
-uncsv: uncsv.o main.o
-	${CC} ${LDFLAGS} -o uncsv uncsv.o main.o
+uncsv: uncsv.o main.o buffer.o
+	${CC} ${LDFLAGS} -o uncsv uncsv.o main.o buffer.o
 
-csv: csv.o main.o
-	${CC} ${LDFLAGS} -o csv csv.o main.o
+csv: csv.o main.o buffer.o
+	${CC} ${LDFLAGS} -o csv csv.o main.o buffer.o
 
 ctags:
 	ctags *.c *.h

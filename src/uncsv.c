@@ -37,6 +37,10 @@ char previous = '\0';
 char quoted = 0;
 int possible_quoted_quote = 0;
 
+void flush_output();
+void write_character(char);
+void write_string(char *, size_t);
+
 
 void
 usage(void)
@@ -103,7 +107,7 @@ convert_char(char *c)
 int
 convert_from_fp(FILE *fp)
 {
-	int i, retcode, o = 0;
+	int i, retcode;
 	char buf[READ_BUFFER_SIZE], c;
 	size_t s;
 
@@ -127,14 +131,12 @@ convert_from_fp(FILE *fp)
 			write_character(c);
 		}
 
-		if (o > 0) {
-			flush_output();
-		}
-
 		if (feof(fp) != 0) {
 			break;
 		}
 	}
+
+	flush_output();
 
 	return 0;
 }

@@ -19,22 +19,12 @@
 #include <unistd.h>
 #include <string.h>
 #include <err.h>
-// 
-// 
-// #define READ_BUFFER_SIZE 1024
-// 
-// #define CONVERT_OUTCOME_ERROR -1
-// #define CONVERT_OUTCOME_KEEP 0
-// #define CONVERT_OUTCOME_DROP 1
-// 
+
 #define ERR_BAD_DELIMITER "error: delimiter should be one-byte only " \
 			  "or one of: \\t, \\n, \\0"
-// 
-// 
+
 char delimiter = '|';
-// char previous = '\0';
-// char quoted = 0;
-// int possible_quoted_quote = 0;
+char quote_for_space = 0;
 
 void usage(void);
 int convert_from_fp(FILE *);
@@ -48,8 +38,11 @@ main(int argc, char **argv)
 	extern char *optarg;
 	extern int optind;
 
-	while ((opt = getopt(argc, argv, "d:Vh")) != -1) {
+	while ((opt = getopt(argc, argv, "sd:Vh")) != -1) {
 		switch (opt) {
+		case 's':
+			quote_for_space = 1;
+			break;
 		case 'd':
 			i = strlen(optarg);
 			if (i == 2 && optarg[0] == '\\') {

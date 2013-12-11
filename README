@@ -28,6 +28,9 @@ DESCRIPTION
 	     for csv , defaults to the pipe character ’|’. If the delimiter is
 	     found in the input data, both programs interrupt.
 
+     −s      Quote all fields with a heading or trailing space (or tab). This
+	     is only applicable when generating the CSV stream.
+
      −V      Print version.
 
      −h      Print usage.

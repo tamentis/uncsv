@@ -29,11 +29,14 @@
 
 
 extern char delimiter;
+extern char quote_for_space;
 int start_of_line = 1;
 
 
+void flush_output();
 void write_character(char);
 void write_string(char *, size_t);
+
 
 void
 usage(void)
@@ -91,9 +94,11 @@ convert_field(char *c, size_t len)
 		len -= l;
 	}
 
-	if (buf[1] == ' ' || buf[1] == '\t' || buf[len] == ' '
-			|| buf[len] == '\t') {
-		quoted = 1;
+	if (quote_for_space) {
+		if (buf[1] == ' ' || buf[1] == '\t' || buf[len] == ' '
+				|| buf[len] == '\t') {
+			quoted = 1;
+		}
 	}
 
 	if (quoted) {
@@ -184,6 +189,8 @@ convert_from_fp(FILE *fp)
 
 		lineno++;
 	}
+
+	flush_output();
 
 	return 0;
 }

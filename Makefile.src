@@ -20,9 +20,9 @@ README: uncsv.1
 	 	| tail +5 \
 	 	| sed '$$d' \
 		| col -b > README
-	# OpenBSD
-	# mandoc -Tascii ${PROG}.1 \
-	# 	| sed 's/.//g' \
-	# 	| tail +3 \
-	# 	| sed '$$d' \
-	# 	> README
+# 	# OpenBSD
+#	mandoc -Tascii uncsv.1 \
+#		| sed 's/.//g' \
+#		| tail +3 \
+#		| sed '$$d' \
+#		> README

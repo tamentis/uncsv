@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdbool.h>
 #include <err.h>
 
 
@@ -30,7 +31,7 @@
 
 extern char delimiter;
 extern char quote_for_space;
-int start_of_line = 1;
+bool start_of_line = true;
 
 
 void flush_output();
@@ -63,10 +64,10 @@ convert_field(char *c, size_t len)
 	static char buf[MAXFIELDLEN] = "\"";
 	char *cur, *q;
 	int offset = 1;
-	int quoted = 0;
+	bool quoted = false;
 	size_t l;
 
-	if (start_of_line == 0) {
+	if (!start_of_line) {
 		write_character(',');
 	}
 
@@ -80,7 +81,7 @@ convert_field(char *c, size_t len)
 			break;
 		}
 
-		quoted = 1;
+		quoted = true;
 
 		/* Copy everything up to the quote, including the quote. */
 		l = q - c + 1;
@@ -97,7 +98,7 @@ convert_field(char *c, size_t len)
 	if (quote_for_space) {
 		if (buf[1] == ' ' || buf[1] == '\t' || buf[len] == ' '
 				|| buf[len] == '\t') {
-			quoted = 1;
+			quoted = true;
 		}
 	}
 
@@ -107,7 +108,7 @@ convert_field(char *c, size_t len)
 	}
 
 	write_string(buf + offset, cur - (buf + offset));
-	start_of_line = 0;
+	start_of_line = false;
 }
 
 
@@ -149,7 +150,7 @@ convert_line(char *line)
 			convert_field(cur, fieldlen);
 			*f = c;
 			write_string(f, strlen(f));
-			start_of_line = 1;
+			start_of_line = true;
 			break;
 		}
 

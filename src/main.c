@@ -18,13 +18,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdbool.h>
 #include <err.h>
 
 #define ERR_BAD_DELIMITER "error: delimiter should be one-byte only " \
 			  "or one of: \\t, \\n, \\0"
 
 char delimiter = '|';
-char quote_for_space = 0;
+bool quote_for_space = false;
 
 void usage(void);
 int convert_from_fp(FILE *);
@@ -41,7 +42,7 @@ main(int argc, char **argv)
 	while ((opt = getopt(argc, argv, "sd:Vh")) != -1) {
 		switch (opt) {
 		case 's':
-			quote_for_space = 1;
+			quote_for_space = true;
 			break;
 		case 'd':
 			i = strlen(optarg);

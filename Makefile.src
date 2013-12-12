@@ -4,6 +4,7 @@ all:
 install:
 	install -d -m 755 ${PREFIX}/bin
 	install -m 755 src/uncsv ${PREFIX}/bin
+	install -m 755 src/csv ${PREFIX}/bin
 	install -d -m 755 ${PREFIX}/${MANDEST}/man1
 	install -m 644 uncsv.1 ${PREFIX}/${MANDEST}/man1/uncsv.1
 	install -m 644 uncsv.1 ${PREFIX}/${MANDEST}/man1/csv.1

@@ -1,0 +1,40 @@
+#!/bin/sh
+
+base="../src"
+passed=0
+failed=0
+
+# $1 - input_filename
+runtest() {
+	input_filename="$1"
+	test_dir=`dirname $input_filename`
+	test_name=`basename $test_dir`
+	program_dir=`dirname $test_dir`
+	program_name=`basename $program_dir`
+	/bin/echo -n "$program_name $test_name... "
+
+	if [ ! -x "$base/$program_name" ]; then
+		echo "error: $program_name not found in $base"
+		exit 100
+	fi
+
+	output_filename="$test_dir/output"
+	test_filename="$test_dir/test"
+
+	$base/$program_name < $input_filename > $test_filename
+	if diff $output_filename $test_filename > /dev/null; then
+		echo ok
+		passed=$((passed + 1))
+		rm -f $test_filename
+	else
+		echo fail
+		failed=$((failed + 1))
+	fi
+}
+
+for input_filename in `find . -type f -name input`; do
+	runtest $input_filename
+done
+
+echo "passed: $passed"
+echo "failed: $failed"

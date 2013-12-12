@@ -1,4 +1,4 @@
- - basic test suite
  - allow to pass the new-line replacement string (default to space).
  - document the line and field size limit for 'csv'.
  - make sure everything works when the last field is escaped (where is the new-line/carriage return?).
+ - add tests for error cases (e.g. output delimiter in input data).

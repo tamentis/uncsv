@@ -95,6 +95,10 @@ convert_field(char *c, size_t len)
 		len -= l;
 	}
 
+	if (strchr(c, ',') != NULL) {
+		quoted = true;
+	}
+
 	if (quote_for_space) {
 		if (buf[1] == ' ' || buf[1] == '\t' || buf[len] == ' '
 				|| buf[len] == '\t') {

@@ -13,6 +13,10 @@ mantest:
 
 clean:
 	cd src/ && make clean
+	find tests/ -type f -name "test" -delete
+
+test:
+	cd tests/ && ./run
 
 README: uncsv.1
 	nroff -man uncsv.1 \

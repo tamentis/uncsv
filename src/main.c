@@ -26,6 +26,8 @@
 
 char delimiter = '|';
 bool quote_for_space = false;
+char *r_replacement = NULL;
+char *n_replacement = NULL;
 
 void usage(void);
 int convert_from_fp(FILE *);
@@ -39,8 +41,18 @@ main(int argc, char **argv)
 	extern char *optarg;
 	extern int optind;
 
-	while ((opt = getopt(argc, argv, "sd:Vh")) != -1) {
+	while ((opt = getopt(argc, argv, "c:n:sd:Vh")) != -1) {
 		switch (opt) {
+		case 'r':
+			if (r_replacement == NULL) {
+				r_replacement = strdup(optarg);
+			}
+			break;
+		case 'n':
+			if (n_replacement == NULL) {
+				n_replacement = strdup(optarg);
+			}
+			break;
 		case 's':
 			quote_for_space = true;
 			break;

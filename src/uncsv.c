@@ -27,6 +27,8 @@
 #define CONVERT_OUTCOME_ERROR -1
 #define CONVERT_OUTCOME_KEEP 0
 #define CONVERT_OUTCOME_DROP 1
+#define CONVERT_OUTCOME_CARRIAGE_RETURN 2
+#define CONVERT_OUTCOME_LINE_FEED 3
 
 #define ERR_BAD_DELIMITER "error: delimiter should be one-byte only " \
 			  "or one of: \\t, \\n, \\0"
@@ -36,6 +38,8 @@ extern char delimiter;
 char previous = '\0';
 bool quoted = false;
 bool possible_quoted_quote = false;
+extern char *r_replacement;
+extern char *n_replacement;
 
 void flush_output();
 void write_character(char);
@@ -85,12 +89,14 @@ convert_char(char *c)
 	}
 
 	/*
-	 * Replace new lines by spaces, that's the simplest way to keep the
-	 * output awk-friendly.
+	 * These characters make any good line-based UNIX tools angry, give the
+	 * user an option to convert them in a meaningful way.
 	 */
-	if (quoted && (*c == '\r' || *c == '\n')) {
-		*c = ' ';
-		return CONVERT_OUTCOME_KEEP;
+	if (quoted && *c == '\r') {
+		return CONVERT_OUTCOME_CARRIAGE_RETURN;
+	}
+	if (quoted && *c == '\n') {
+		return CONVERT_OUTCOME_LINE_FEED;
 	}
 
 	return CONVERT_OUTCOME_KEEP;
@@ -122,10 +128,29 @@ convert_from_fp(FILE *fp)
 			}
 			previous = c;
 
-			if (retcode == CONVERT_OUTCOME_DROP)
-				continue;
-
-			write_character(c);
+			switch (retcode) {
+			case CONVERT_OUTCOME_DROP:
+				break;
+			case CONVERT_OUTCOME_KEEP:
+				write_character(c);
+				break;
+			case CONVERT_OUTCOME_CARRIAGE_RETURN:
+				if (r_replacement == NULL) {
+					write_character(' ');
+				} else {
+					write_string(r_replacement,
+							strlen(r_replacement));
+				}
+				break;
+			case CONVERT_OUTCOME_LINE_FEED:
+				if (n_replacement == NULL) {
+					write_character(' ');
+				} else {
+					write_string(n_replacement,
+							strlen(n_replacement));
+				}
+				break;
+			}
 		}
 
 		if (feof(fp) != 0) {

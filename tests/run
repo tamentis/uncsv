@@ -11,7 +11,7 @@ runtest() {
 	test_name=`basename $test_dir`
 	program_dir=`dirname $test_dir`
 	program_name=`basename $program_dir`
-	/bin/echo -n "$program_name $test_name... "
+	/bin/echo -n "$program_name $test_name "
 
 	if [ ! -x "$base/$program_name" ]; then
 		echo "error: $program_name not found in $base"
@@ -20,14 +20,19 @@ runtest() {
 
 	output_filename="$test_dir/output"
 	test_filename="$test_dir/test"
+	if [ -e "$test_dir/params" ]; then
+		params=`cat $test_dir/params`
+	else
+		params=""
+	fi
 
-	$base/$program_name < $input_filename > $test_filename
+	$base/$program_name $params < $input_filename > $test_filename
 	if diff $output_filename $test_filename > /dev/null; then
-		echo ok
+		echo PASS
 		passed=$((passed + 1))
 		rm -f $test_filename
 	else
-		echo fail
+		echo FAIL
 		failed=$((failed + 1))
 	fi
 }

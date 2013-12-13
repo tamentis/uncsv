@@ -3,7 +3,6 @@
 # Configure script for 'uncsv'
 # Copyright (c) 2013 Bertrand Janin <b@janin.com>
 #
-#
 
 UNCSV_VERSION="0.1.0"
 

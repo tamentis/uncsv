@@ -27,7 +27,8 @@
 // Given the following MAXLINELEN, a field once quoted could be up to twice its
 // original size if all the MAXLINELEN bytes are double quotes. Also, add two
 // bytes for the quotes themselves.
-#define MAXLINELEN 4096
+// #define MAXLINELEN 4096
+#define MAXLINELEN 64 * 1024
 #define MAXFIELDLEN MAXLINELEN * 2 + 2
 
 

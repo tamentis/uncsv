@@ -1,2 +1,0 @@
- - document the line and field size limit for 'csv'.
- - add tests for error cases (e.g. output delimiter in input data).

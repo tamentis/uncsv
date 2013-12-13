@@ -100,6 +100,9 @@ Print usage.
  psql> \\o | csv > /tmp/output.csv
  psql> select * from candies;
  psql> \\o
+.Sh BUGS
+.Nm csv
+has a 64KB limit on line size.
 .Sh SEE ALSO
 .Xr awk 1 ,
 .Xr cut 1

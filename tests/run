@@ -4,10 +4,46 @@ base="../src"
 passed=0
 failed=0
 
-# $1 - input_filename
+retcode_pass() {
+	if [ "$retcode_filename" = "/dev/null" ]; then
+		return 0
+	fi
+
+	if diff $retcode_filename $test_dir/retcode > /dev/null; then
+		return 0
+	fi
+
+	return 1
+}
+
+stdout_pass() {
+	if [ "$stdout_filename" = "/dev/null" ]; then
+		return 0
+	fi
+
+	if diff $stdout_filename $test_dir/stdout > /dev/null; then
+		return 0
+	fi
+
+	return 1
+}
+
+stderr_pass() {
+	if [ "$stderr_filename" = "/dev/null" ]; then
+		return 0
+	fi
+
+	if diff $stderr_filename $test_dir/stderr > /dev/null; then
+		return 0
+	fi
+
+	return 1
+}
+
+# $1 - stdin_filename
 runtest() {
-	input_filename="$1"
-	test_dir=`dirname $input_filename`
+	stdin_filename="$1"
+	test_dir=`dirname $stdin_filename`
 	test_name=`basename $test_dir`
 	program_dir=`dirname $test_dir`
 	program_name=`basename $program_dir`
@@ -18,27 +54,56 @@ runtest() {
 		exit 100
 	fi
 
-	output_filename="$test_dir/output"
+	stdout_filename="$test_dir/output"
 	test_filename="$test_dir/test"
+	error_filename="$test_dir/error"
 	if [ -e "$test_dir/params" ]; then
 		params=`cat $test_dir/params`
 	else
 		params=""
 	fi
 
-	$base/$program_name $params < $input_filename > $test_filename
-	if diff $output_filename $test_filename > /dev/null; then
+	# stderr
+	if [ -e "$test_dir/stderr" ]; then
+		stderr_filename="$test_dir/test.stderr"
+	else
+		stderr_filename="/dev/null"
+	fi
+
+	# stdout
+	if [ -e "$test_dir/stdout" ]; then
+		stdout_filename="$test_dir/test.stdout"
+	else
+		stdout_filename="/dev/null"
+	fi
+
+	# retcode
+	if [ -e "$test_dir/retcode" ]; then
+		retcode_filename="$test_dir/test.retcode"
+	else
+		retcode_filename="/dev/null"
+	fi
+
+	rm -f $test_dir/test.*
+
+	$base/$program_name $params \
+		< $stdin_filename \
+		1> $stdout_filename \
+		2> $stderr_filename
+	echo $? > $retcode_filename
+
+	if retcode_pass && stdout_pass && stderr_pass; then
 		echo PASS
 		passed=$((passed + 1))
-		rm -f $test_filename
+		rm -f $test_dir/test.*
 	else
 		echo FAIL
 		failed=$((failed + 1))
 	fi
 }
 
-for input_filename in `find . -type f -name input`; do
-	runtest $input_filename
+for stdin_filename in `find . -type f -name stdin`; do
+	runtest $stdin_filename
 done
 
 echo "passed: $passed"

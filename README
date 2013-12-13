@@ -62,6 +62,9 @@ EXAMPLES
       psql> select * from candies;
       psql> \o
 
+BUGS
+     csv has a 64KB limit on line size.
+
 SEE ALSO
      awk(1), cut(1)
 

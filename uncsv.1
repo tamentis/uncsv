@@ -61,8 +61,9 @@ Specify the output delimiter for
 .Nm uncsv
 and the input delimiter for
 .Nm csv
-, defaults to the pipe character '|'. If the
-delimiter is found in the input data, both programs interrupt.
+, defaults to the pipe character '|'.
+.Nm uncsv
+interrupts if the delimiter is found in the input data.
 .It Fl n Ar repl
 If specified, all the new-line characters (a.k.a. line feed or \\n) will be
 replaced by this replacement string.

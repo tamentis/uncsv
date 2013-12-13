@@ -25,8 +25,8 @@ DESCRIPTION
 
      −d delimiter
 	     Specify the output delimiter for uncsv and the input delimiter
-	     for csv , defaults to the pipe character ’|’. If the delimiter is
-	     found in the input data, both programs interrupt.
+	     for csv , defaults to the pipe character ’|’.  uncsv interrupts
+	     if the delimiter is found in the input data.
 
      −n repl
 	     If specified, all the new‐line characters (a.k.a. line feed or

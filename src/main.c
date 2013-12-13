@@ -21,6 +21,9 @@
 #include <stdbool.h>
 #include <err.h>
 
+#include "uncsv.h"
+
+
 #define ERR_BAD_DELIMITER "error: delimiter should be one-byte only " \
 			  "or one of: \\t, \\n, \\0"
 
@@ -41,7 +44,7 @@ main(int argc, char **argv)
 	extern char *optarg;
 	extern int optind;
 
-	while ((opt = getopt(argc, argv, "c:n:sd:Vh")) != -1) {
+	while ((opt = getopt(argc, argv, "r:n:sd:Vh")) != -1) {
 		switch (opt) {
 		case 'r':
 			if (r_replacement == NULL) {

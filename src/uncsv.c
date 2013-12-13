@@ -21,6 +21,8 @@
 #include <stdbool.h>
 #include <err.h>
 
+#include "uncsv.h"
+
 
 #define READ_BUFFER_SIZE 4096
 
@@ -35,26 +37,23 @@
 
 
 extern char delimiter;
+extern char *r_replacement;
+extern char *n_replacement;
 char previous = '\0';
 bool quoted = false;
 bool possible_quoted_quote = false;
-extern char *r_replacement;
-extern char *n_replacement;
-
-void flush_output();
-void write_character(char);
-void write_string(char *, size_t);
 
 
 void
 usage(void)
 {
-	printf("usage: uncsv [-Vh] [-d delimiter] [file ...]\n");
+	printf("usage: uncsv [-Vh] [-d delimiter] [-r repl] [-n repl] "
+			"[file ...]\n");
 	exit(100);
 }
 
 
-int
+static int
 convert_char(char *c)
 {
 	if (*c == delimiter) {
@@ -110,9 +109,9 @@ convert_char(char *c)
 int
 convert_from_fp(FILE *fp)
 {
-	int i, retcode;
+	int retcode;
 	char buf[READ_BUFFER_SIZE], c;
-	size_t s;
+	size_t i, s;
 
 	for (;;) {
 		s = fread(buf, 1, sizeof(buf), fp);

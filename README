@@ -31,12 +31,15 @@ DESCRIPTION
      −n repl
 	     If specified, all the new‐line characters (a.k.a. line feed or
 	     \n) will be replaced by this replacement string.  uncsv replaces
-	     them by spaces by default which is destructive.
+	     them by spaces by default which is destructive.  csv will do the
+	     opposite and replace this pattern by an actual new line charac‐
+	     ter.
 
      −r repl
 	     If specified, all the carriage return characters (a.k.a. \r) will
 	     be replaced by this replacement string.  uncsv replaces them by
-	     spaces by default which is destructive.
+	     spaces by default which is destructive.  csv will do the opposite
+	     and replace this pattern by an actual carriage return character.
 
      −s      Quote all fields with a heading or trailing space (or tab). This
 	     is only applicable when generating the CSV stream.

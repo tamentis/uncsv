@@ -23,6 +23,8 @@
 #include <string.h>
 #include <err.h>
 
+#include "uncsv.h"
+
 
 #define WRITE_BUFFER_SIZE 4096
 

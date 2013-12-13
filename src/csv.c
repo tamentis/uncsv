@@ -21,6 +21,8 @@
 #include <stdbool.h>
 #include <err.h>
 
+#include "uncsv.h"
+
 
 // Given the following MAXLINELEN, a field once quoted could be up to twice its
 // original size if all the MAXLINELEN bytes are double quotes. Also, add two
@@ -31,6 +33,8 @@
 
 extern char delimiter;
 extern char quote_for_space;
+extern char *r_replacement;
+extern char *n_replacement;
 bool start_of_line = true;
 
 
@@ -42,8 +46,52 @@ void write_string(char *, size_t);
 void
 usage(void)
 {
-	printf("usage: csv [-Vh] [-d delimiter] [file ...]\n");
+	printf("usage: csv [-Vh] [-d delimiter] [-r repl] [-n repl] "
+			"[file ...]\n");
 	exit(100);
+}
+
+
+/*
+ * Because the replacement is always of smaller or equal size, we can scan and
+ * replace in-place.
+ */
+static int
+replace_string_by_char(char *big, char *pattern, char repl)
+{
+	char *r, *w;
+	char *c;
+	int count = 0;
+	size_t len, patlen;
+
+	r = big;
+	w = big;
+
+	patlen = strlen(pattern);
+
+	for (;;) {
+		c = strstr(r, pattern);
+		if (c == NULL) {
+			if (count > 0) {
+				memcpy(w, r, strlen(r) + 1);
+			}
+			break;
+		}
+
+		if (count > 0) {
+			len = r - c;
+			memcpy(w, r, len);
+		}
+
+		*c = repl;
+		w = c + 1;
+
+		r = c + patlen;
+
+		count++;
+	}
+
+	return count;
 }
 
 
@@ -58,12 +106,12 @@ usage(void)
  * are often implemented in assembly while a normal char-by-char implementation
  * would not. It was proven to be three times faster on OS X.
  */
-void
+static void
 convert_field(char *c, size_t len)
 {
 	static char buf[MAXFIELDLEN] = "\"";
 	char *cur, *q;
-	int offset = 1;
+	int offset = 1, count;
 	bool quoted = false;
 	size_t l;
 
@@ -72,6 +120,22 @@ convert_field(char *c, size_t len)
 	}
 
 	cur = buf + 1;
+
+	if (r_replacement != NULL) {
+		count = replace_string_by_char(c, r_replacement, '\r');
+		if (count > 0) {
+			len = strlen(c);
+			quoted = true;
+		}
+	}
+
+	if (n_replacement != NULL) {
+		count = replace_string_by_char(c, n_replacement, '\n');
+		if (count > 0) {
+			len = strlen(c);
+			quoted = true;
+		}
+	}
 
 	for (;;) {
 		q = strchr(c, '"');
@@ -123,7 +187,7 @@ convert_field(char *c, size_t len)
  * for proper quoting/escaping then add a comma between each of them while
  * keeping the original end of line termination.
  */
-int
+static int
 convert_line(char *line)
 {
 	char c, *f, *cur;

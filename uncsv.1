@@ -68,11 +68,16 @@ If specified, all the new-line characters (a.k.a. line feed or \\n) will be
 replaced by this replacement string.
 .Nm uncsv
 replaces them by spaces by default which is destructive.
+.Nm csv
+will do the opposite and replace this pattern by an actual new line character.
 .It Fl r Ar repl
 If specified, all the carriage return characters (a.k.a. \\r) will be
 replaced by this replacement string.
 .Nm uncsv
 replaces them by spaces by default which is destructive.
+.Nm csv
+will do the opposite and replace this pattern by an actual carriage return
+character.
 .It Fl s
 Quote all fields with a heading or trailing space (or tab). This is only
 applicable when generating the CSV stream.

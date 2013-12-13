@@ -13,7 +13,7 @@
 .\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 .\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 .\"
-.Dd 2013-12-06
+.Dd 2013-12-13
 .Dt uncsv 1 URM
 .Os
 .Sh NAME
@@ -24,12 +24,16 @@
 .Bk -words
 .Op Fl hV
 .Op Fl d Ar delimiter
+.Op Fl n Ar repl
+.Op Fl r Ar repl
 .Op Ar file ...
 .Nm csv
 .Ek
 .Bk -words
 .Op Fl hV
 .Op Fl d Ar delimiter
+.Op Fl n Ar repl
+.Op Fl r Ar repl
 .Op Ar file ...
 .Ek
 .Sh DESCRIPTION
@@ -37,8 +41,9 @@
 is a filter command converting the lines of a CSV file into non-escaped,
 non-quoted delimited file (pipe by default). This program will error out if
 it encounters a character matching the delimiter, it will also replace all the
-carriage return and new-line characters by spaces; assuming you are planning
-on using ordinary UNIX tools with the output, this is what you want.
+carriage return and new-line characters (spaces by default, see -r and -n);
+assuming you are planning on using ordinary UNIX tools with the output, this is
+what you want.
 .Pp
 .Nm csv
 is the opposite of this command. It takes an unquoted stream of values, separated
@@ -58,6 +63,16 @@ and the input delimiter for
 .Nm csv
 , defaults to the pipe character '|'. If the
 delimiter is found in the input data, both programs interrupt.
+.It Fl n Ar repl
+If specified, all the new-line characters (a.k.a. line feed or \\n) will be
+replaced by this replacement string.
+.Nm uncsv
+replaces them by spaces by default which is destructive.
+.It Fl r Ar repl
+If specified, all the carriage return characters (a.k.a. \\r) will be
+replaced by this replacement string.
+.Nm uncsv
+replaces them by spaces by default which is destructive.
 .It Fl s
 Quote all fields with a heading or trailing space (or tab). This is only
 applicable when generating the CSV stream.

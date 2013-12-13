@@ -2,16 +2,16 @@ NAME
      uncsv — (un‐)escape/(un‐)quote to and from a CSV stream
 
 SYNOPSIS
-     uncsv [−hV] [−d delimiter] [file ...]
-     csv [−hV] [−d delimiter] [file ...]
+     uncsv [−hV] [−d delimiter] [−n repl] [−r repl] [file ...]
+     csv [−hV] [−d delimiter] [−n repl] [−r repl] [file ...]
 
 DESCRIPTION
      uncsv is a filter command converting the lines of a CSV file into non‐
      escaped, non‐quoted delimited file (pipe by default). This program will
      error out if it encounters a character matching the delimiter, it will
-     also replace all the carriage return and new‐line characters by spaces;
-     assuming you are planning on using ordinary UNIX tools with the output,
-     this is what you want.
+     also replace all the carriage return and new‐line characters (spaces by
+     default, see ‐r and ‐n); assuming you are planning on using ordinary UNIX
+     tools with the output, this is what you want.
 
      csv is the opposite of this command. It takes an unquoted stream of val‐
      ues, separated by the delimiter of your choice (default: pipe ’|’) and
@@ -27,6 +27,16 @@ DESCRIPTION
 	     Specify the output delimiter for uncsv and the input delimiter
 	     for csv , defaults to the pipe character ’|’. If the delimiter is
 	     found in the input data, both programs interrupt.
+
+     −n repl
+	     If specified, all the new‐line characters (a.k.a. line feed or
+	     \n) will be replaced by this replacement string.  uncsv replaces
+	     them by spaces by default which is destructive.
+
+     −r repl
+	     If specified, all the carriage return characters (a.k.a. \r) will
+	     be replaced by this replacement string.  uncsv replaces them by
+	     spaces by default which is destructive.
 
      −s      Quote all fields with a heading or trailing space (or tab). This
 	     is only applicable when generating the CSV stream.

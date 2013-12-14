@@ -18,7 +18,7 @@
 .Os
 .Sh NAME
 .Nm uncsv
-.Nd (un-)escape/(un-)quote to and from a CSV stream
+.Nd convert to or from a CSV stream
 .Sh SYNOPSIS
 .Nm uncsv
 .Bk -words
@@ -39,11 +39,10 @@
 .Sh DESCRIPTION
 .Nm
 is a filter command converting the lines of a CSV file into non-escaped,
-non-quoted delimited file (pipe by default). This program will error out if
-it encounters a character matching the delimiter, it will also replace all the
-carriage return and new-line characters (spaces by default, see -r and -n);
-assuming you are planning on using ordinary UNIX tools with the output, this is
-what you want.
+non-quoted delimited file (pipe by default). This program will error out if it
+encounters a character matching the delimiter, it will also replace the
+carriage return and new-line characters found in quoted values allowing you
+to use awk to play with your CSVs.
 .Pp
 .Nm csv
 is the opposite of this command. It takes an unquoted stream of values, separated
@@ -90,17 +89,23 @@ Print usage.
 .Sh EXAMPLES
 .Pp
  # Print the second field of a CSV:
- uncsv file.csv | awk -F\\| '{ print $2 }'
+ uncsv file.csv | cut -d'|' -f 2
 .Pp
  # Convert a CSV to un-quoted tab-delimited format:
  uncsv -d'\\t' < file.csv > delimited
 .Pp
  # Convert a PostgreSQL output to CSV:
- $ psql yourdb
+ psql yourdb
  psql> \\f\\a
  psql> \\o | csv > /tmp/output.csv
  psql> select * from candies;
  psql> \\o
+.Pp
+ # Print the first line of the third field.
+ uncsv -n '~LF~' file.csv | cut -d'|' -f 3 | sed 's/~LF~.*//g'
+.Pp
+ # Convert your /etc/passwd to CSV.
+ csv -d: < /etc/passwd
 .Sh BUGS
 .Nm csv
 has a 64KB limit on line size.

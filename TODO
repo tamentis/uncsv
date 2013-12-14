@@ -1,0 +1,2 @@
+ - Add a '-p' flag that would allow the two binaries to utilize all the cpu
+   cores available. (split the input, distribute, join...)

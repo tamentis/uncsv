@@ -20,7 +20,7 @@ test:
 	cd tests/ && ./run
 
 README: uncsv.1
-	nroff -man uncsv.1 \
+	LC_ALL=C LOCALE=C nroff -man uncsv.1 \
 	 	| sed 's/.//g' \
 	 	| tail +5 \
 	 	| sed '$$d' \

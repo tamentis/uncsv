@@ -1,71 +1,76 @@
 NAME
-     uncsv — convert to or from a CSV stream
+     uncsv -- convert to or from a CSV stream
 
 SYNOPSIS
-     uncsv [−hV] [−d delimiter] [−n repl] [−r repl] [file ...]
-     csv [−hV] [−d delimiter] [−n repl] [−r repl] [file ...]
+     uncsv [-hV] [-d delimiter] [-n repl] [-r repl] [file ...]
+     csv [-hV] [-d delimiter] [-n repl] [-r repl] [file ...]
 
 DESCRIPTION
-     uncsv is a filter command converting the lines of a CSV file into non‐
-     escaped, non‐quoted delimited file (pipe by default). This program will
+     uncsv is a filter command converting the lines of a CSV file into non-
+     escaped, non-quoted delimited file (pipe by default). This program will
      error out if it encounters a character matching the delimiter, it will
-     also replace the carriage return and new‐line characters found in quoted
+     also replace the carriage return and new-line characters found in quoted
      values allowing you to use awk to play with your CSVs.
 
-     csv is the opposite of this command. It takes an unquoted stream of val‐
-     ues, separated by the delimiter of your choice (default: pipe ’|’) and
+     csv is the opposite of this command. It takes an unquoted stream of val-
+     ues, separated by the delimiter of your choice (default: pipe '|') and
      produces a "standard" CSV file.
 
-     Both tools avoid end‐of‐line character politics and will leave these
-     untouched, if your file comes with both carriage returns and new‐line
-     characters (\r\n a.k.a. CRLF), uncsv will leave them as‐is.
+     Both tools avoid end-of-line character politics and will leave these
+     untouched, if your file comes with both carriage returns and new-line
+     characters (\r\n a.k.a. CRLF), uncsv will leave them as-is.
 
      The options are as follows:
 
-     −d delimiter
+     -d delimiter
 	     Specify the output delimiter for uncsv and the input delimiter
-	     for csv , defaults to the pipe character ’|’.  uncsv interrupts
+	     for csv , defaults to the pipe character '|'.  uncsv interrupts
 	     if the delimiter is found in the input data.
 
-     −n repl
-	     If specified, all the new‐line characters (a.k.a. line feed or
+     -n repl
+	     If specified, all the new-line characters (a.k.a. line feed or
 	     \n) will be replaced by this replacement string.  uncsv replaces
 	     them by spaces by default which is destructive.  csv will do the
-	     opposite and replace this pattern by an actual new line charac‐
+	     opposite and replace this pattern by an actual new line charac-
 	     ter.
 
-     −r repl
+     -r repl
 	     If specified, all the carriage return characters (a.k.a. \r) will
 	     be replaced by this replacement string.  uncsv replaces them by
 	     spaces by default which is destructive.  csv will do the opposite
 	     and replace this pattern by an actual carriage return character.
 
-     −s      Quote all fields with a heading or trailing space (or tab). This
+     -s      Quote all fields with a heading or trailing space (or tab). This
 	     is only applicable when generating the CSV stream.
 
-     −V      Print version.
+     -V      Print version.
 
-     −h      Print usage.
+     -h      Print usage.
 
 EXAMPLES
-      # Print the second field of a CSV:
-      uncsv file.csv | cut ‐d’|’ ‐f 2
+     Print the second field of a CSV:
 
-      # Convert a CSV to un‐quoted tab‐delimited format:
-      uncsv ‐d’\t’ < file.csv > delimited
+	   uncsv file.csv | cut -d'|' -f 2
 
-      # Convert a PostgreSQL output to CSV:
-      psql yourdb
-      psql> \f\a
-      psql> \o | csv > /tmp/output.csv
-      psql> select * from candies;
-      psql> \o
+     Convert a CSV to un-quoted tab-delimited format:
 
-      # Print the first line of the third field.
-      uncsv ‐n ’~LF~’ file.csv | cut ‐d’|’ ‐f 3 | sed ’s/~LF~.*//g’
+	   uncsv -d' ' < file.csv > delimited
 
-      # Convert your /etc/passwd to CSV.
-      csv ‐d: < /etc/passwd
+     Convert a PostgreSQL output to CSV:
+
+	   psql yourdb
+	   psql> \f\a
+	   psql> \o | csv > /tmp/output.csv
+	   psql> select * from candies;
+	   psql> \o
+
+     Print the first line of the third field:
+
+	   uncsv -n '~LF~' file.csv | cut -d'|' -f 3 | sed 's/~LF~.*//g'
+
+     Convert your /etc/passwd to CSV.
+
+	   csv -d: < /etc/passwd
 
 BUGS
      csv has a 64KB limit on line size.

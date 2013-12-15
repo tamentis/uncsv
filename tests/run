@@ -102,9 +102,15 @@ runtest() {
 	fi
 }
 
-for stdin_filename in `find . -type f -name stdin`; do
+for stdin_filename in `find . -type f -name stdin | sort`; do
 	runtest $stdin_filename
 done
 
 echo "passed: $passed"
 echo "failed: $failed"
+
+if [ "$failed" != "0" ]; then
+	exit 100
+fi
+
+exit 0

@@ -44,7 +44,7 @@ main(int argc, char **argv)
 	extern char *optarg;
 	extern int optind;
 
-	while ((opt = getopt(argc, argv, "r:n:sqQd:Vh")) != -1) {
+	while ((opt = getopt(argc, argv, "r:n:sSqQd:Vh")) != -1) {
 		switch (opt) {
 		case 'r':
 			if (r_replacement == NULL) {
@@ -58,6 +58,9 @@ main(int argc, char **argv)
 			break;
 		case 's':
 			quote_style = QS_BORDER_SPACES;
+			break;
+		case 'S':
+			quote_style = QS_ALL_SPACES;
 			break;
 		case 'q':
 			quote_style = QS_ALL_VALUES;

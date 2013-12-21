@@ -47,7 +47,7 @@ void write_string(char *, size_t);
 void
 usage(void)
 {
-	printf("usage: csv [-Vh] [-d delimiter] [-r repl] [-n repl] "
+	printf("usage: csv [-VhsSqQ] [-d delimiter] [-r repl] [-n repl] "
 			"[file ...]\n");
 	exit(100);
 }
@@ -174,14 +174,19 @@ convert_field(char *c, size_t len)
 				|| buf[len] == '\t') {
 			quoted = true;
 		}
-		/* FALLTHROUGH */
-	case QS_MINIMUM:
-		/* FALLTHROUGH */
-	default:
-		if (strchr(c, ',') != NULL) {
+		break;
+	case QS_ALL_SPACES:
+		if (strpbrk(c, " \t") != NULL) {
 			quoted = true;
 		}
 		break;
+	case QS_MINIMUM:
+	default:
+		break;
+	}
+
+	if (!quoted && strchr(c, ',') != NULL) {
+		quoted = true;
 	}
 
 	if (quoted) {

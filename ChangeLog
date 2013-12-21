@@ -1,8 +1,8 @@
 0.9.1 Bertrand Janin <b@janin.com>
 
-	* Added a flag to trigger a new quotation style where all non-blank
-	  values are quoted (-q) and another one where everything is quoted
-	  unconditionally (-Q).
+	* Added a flag (-q) to 'csv' to quote all non-blank values.
+	* Added a flag (-Q) to 'csv' to quote everything unconditionally.
+	* Added a flag (-S) to 'csv' to quote all values containing spaces.
 
 0.9.0 Bertrand Janin <b@janin.com>
 

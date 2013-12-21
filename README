@@ -3,7 +3,7 @@ NAME
 
 SYNOPSIS
      uncsv [-hV] [-d delimiter] [-n repl] [-r repl] [file ...]
-     csv [-hVsqQ] [-d delimiter] [-n repl] [-r repl] [file ...]
+     csv [-hVsSqQ] [-d delimiter] [-n repl] [-r repl] [file ...]
 
 DESCRIPTION
      uncsv is a filter command converting the lines of a CSV file into non-
@@ -40,7 +40,10 @@ DESCRIPTION
 	     spaces by default which is destructive.  csv will do the opposite
 	     and replace this pattern by an actual carriage return character.
 
-     -s      Quote all fields with bordering spaces (heading or trailing).
+     -s      Quote all fields with bordering spaces or tabs (heading or trail-
+	     ing). This is only applicable when generating the CSV stream.
+
+     -S      Quote all fields containing spaces or tabs (heading or trailing).
 	     This is only applicable when generating the CSV stream.
 
      -q      Quote all fields with a non-empty value. This is only applicable
@@ -86,5 +89,5 @@ SEE ALSO
 
 AUTHORS
      uncsv was written by Bertrand Janin <b@janin.com> and is distributed
-     under an ISC license (BSD compatible, OSI compatible).
+     under an ISC license (BSD, MIT and OSI compatible).
 

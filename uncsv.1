@@ -30,7 +30,7 @@
 .Nm csv
 .Ek
 .Bk -words
-.Op Fl hVsqQ
+.Op Fl hVsSqQ
 .Op Fl d Ar delimiter
 .Op Fl n Ar repl
 .Op Fl r Ar repl
@@ -79,7 +79,10 @@ replaces them by spaces by default which is destructive.
 will do the opposite and replace this pattern by an actual carriage return
 character.
 .It Fl s
-Quote all fields with bordering spaces (heading or trailing). This is only
+Quote all fields with bordering spaces or tabs (heading or trailing). This is
+only applicable when generating the CSV stream.
+.It Fl S
+Quote all fields containing spaces or tabs (heading or trailing). This is only
 applicable when generating the CSV stream.
 .It Fl q
 Quote all fields with a non-empty value. This is only applicable when
@@ -125,4 +128,4 @@ has a 64KB limit on line size.
 .Sh AUTHORS
 .Nm
 was written by Bertrand Janin <b@janin.com> and is distributed under
-an ISC license (BSD compatible, OSI compatible).
+an ISC license (BSD, MIT and OSI compatible).

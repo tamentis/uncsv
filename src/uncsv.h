@@ -14,6 +14,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+enum QUOTE_STYLE {
+	QS_MINIMUM,
+	QS_BORDER_SPACES,
+	QS_ALL_VALUES,
+	QS_EVERYTHING
+};
 
 /* buffer.c */
 void flush_output(void);

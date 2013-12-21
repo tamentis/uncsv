@@ -30,7 +30,7 @@
 .Nm csv
 .Ek
 .Bk -words
-.Op Fl hV
+.Op Fl hVsqQ
 .Op Fl d Ar delimiter
 .Op Fl n Ar repl
 .Op Fl r Ar repl
@@ -79,8 +79,14 @@ replaces them by spaces by default which is destructive.
 will do the opposite and replace this pattern by an actual carriage return
 character.
 .It Fl s
-Quote all fields with a heading or trailing space (or tab). This is only
+Quote all fields with bordering spaces (heading or trailing). This is only
 applicable when generating the CSV stream.
+.It Fl q
+Quote all fields with a non-empty value. This is only applicable when
+generating the CSV stream.
+.It Fl Q
+Quote everything, even empty fields. This is only applicable when generating
+the CSV stream.
 .It Fl V
 Print version.
 .It Fl h

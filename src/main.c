@@ -28,7 +28,7 @@
 			  "or one of: \\t, \\n, \\0"
 
 char delimiter = '|';
-bool quote_for_space = false;
+enum QUOTE_STYLE quote_style = QS_MINIMUM;
 char *r_replacement = NULL;
 char *n_replacement = NULL;
 
@@ -44,7 +44,7 @@ main(int argc, char **argv)
 	extern char *optarg;
 	extern int optind;
 
-	while ((opt = getopt(argc, argv, "r:n:sd:Vh")) != -1) {
+	while ((opt = getopt(argc, argv, "r:n:sqQd:Vh")) != -1) {
 		switch (opt) {
 		case 'r':
 			if (r_replacement == NULL) {
@@ -57,7 +57,13 @@ main(int argc, char **argv)
 			}
 			break;
 		case 's':
-			quote_for_space = true;
+			quote_style = QS_BORDER_SPACES;
+			break;
+		case 'q':
+			quote_style = QS_ALL_VALUES;
+			break;
+		case 'Q':
+			quote_style = QS_EVERYTHING;
 			break;
 		case 'd':
 			i = strlen(optarg);

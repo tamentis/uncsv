@@ -33,7 +33,7 @@
 
 
 extern char delimiter;
-extern char quote_for_space;
+extern enum QUOTE_STYLE quote_style;
 extern char *r_replacement;
 extern char *n_replacement;
 bool start_of_line = true;
@@ -160,15 +160,28 @@ convert_field(char *c, size_t len)
 		len -= l;
 	}
 
-	if (strchr(c, ',') != NULL) {
+	switch (quote_style) {
+	case QS_EVERYTHING:
 		quoted = true;
-	}
-
-	if (quote_for_space) {
+		break;
+	case QS_ALL_VALUES:
+		if (len > 0) {
+			quoted = true;
+		}
+		break;
+	case QS_BORDER_SPACES:
 		if (buf[1] == ' ' || buf[1] == '\t' || buf[len] == ' '
 				|| buf[len] == '\t') {
 			quoted = true;
 		}
+		/* FALLTHROUGH */
+	case QS_MINIMUM:
+		/* FALLTHROUGH */
+	default:
+		if (strchr(c, ',') != NULL) {
+			quoted = true;
+		}
+		break;
 	}
 
 	if (quoted) {

@@ -3,6 +3,7 @@
 	* Added a flag (-q) to 'csv' to quote all non-blank values.
 	* Added a flag (-Q) to 'csv' to quote everything unconditionally.
 	* Added a flag (-S) to 'csv' to quote all values containing spaces.
+	* Fix a bug when multiple replacement strings were in the same value.
 
 0.9.0 Bertrand Janin <b@janin.com>
 

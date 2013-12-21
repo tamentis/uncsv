@@ -60,34 +60,23 @@ usage(void)
 static int
 replace_string_by_char(char *big, char *pattern, char repl)
 {
-	char *r, *w;
-	char *c;
+	char *c, *r;
 	int count = 0;
-	size_t len, patlen;
-
-	r = big;
-	w = big;
+	size_t patlen;
 
 	patlen = strlen(pattern);
+	c = big;
 
 	for (;;) {
-		c = strstr(r, pattern);
+		c = strstr(c, pattern);
 		if (c == NULL) {
-			if (count > 0) {
-				memcpy(w, r, strlen(r) + 1);
-			}
 			break;
 		}
 
-		if (count > 0) {
-			len = r - c;
-			memcpy(w, r, len);
-		}
+		*(c++) = repl;
 
-		*c = repl;
-		w = c + 1;
-
-		r = c + patlen;
+		r = c + patlen - 1;
+		memmove(c, r, strlen(r) + 1);
 
 		count++;
 	}
